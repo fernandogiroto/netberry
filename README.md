@@ -5,7 +5,7 @@ desarrollo de aplicaciones web utilizando PHP Laravel, VUE y tu capacidad para a
 principios SOLID y otros patrones de diseño como Port and Adapters. Además, se valorará
 positivamente tu capacidad para optimizar las consultas a la base de datos.
 
-<img src="https://raw.githubusercontent.com/fernandogiroto/https---github.com-fernandogiroto-netberry/master/resources/js/assets/images/netberry_dashboard.png?token=GHSAT0AAAAAACGT25AX2RKSR4UYK7EM6LUEZHFAPXA" alt="Candee Project" title="Candee Project" width="100%">
+<img src="https://fernandogiroto.com/wp-content/uploads/2023/08/netberry_dashboard.png" alt="NetBerry Project" title="NetBerry Project" width="100%">
 
 ## Installation
 
