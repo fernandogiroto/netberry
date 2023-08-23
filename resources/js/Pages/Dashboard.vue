@@ -88,7 +88,7 @@
         </div>
       </div>
     </div>
-    <!-- TASK LIST -->
+    <!-- TASKS PAGINATION-->
     <Pagination :links="tasks.links"></Pagination>
   </AuthenticatedLayout>
 </template>
@@ -118,7 +118,6 @@ const modalFormTask = useForm({
   task_category: null,
   task_id: null,
 });
-
 
 function submit(task){
   axios.post(route('task.api.create', form))
