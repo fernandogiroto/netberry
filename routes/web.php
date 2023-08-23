@@ -1,10 +1,7 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TaskController;
-use App\Models\Category;
-use App\Models\Task;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,6 +33,5 @@ Route::middleware('auth')->group(function () {
     Route::put('complete_task', [TaskController::class, 'complete'])->name('task.complete');
     Route::post('delete_task', [TaskController::class, 'destroy'])->name('task.delete');
 });
-
 
 require __DIR__ . '/auth.php';

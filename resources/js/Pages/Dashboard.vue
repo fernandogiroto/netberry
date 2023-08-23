@@ -11,7 +11,7 @@
           <input type="text" class="form-control" placeholder="Task Name" v-model="form.task_name">
           <div v-if="form.errors.task_name" class="text-white bg-danger p-2 rounded my-2">{{ form.errors.task_name }}</div>
         </div>
-        <div class="col-12 col-md-5 mt-2">
+        <div class="col-12 col-md-5 mt-2 mt-md-0">
           <select class="form-select" v-model="form.task_category">
             <option disabled>Please select one Category</option>
             <option v-for="category in categorys" :key="category.id" :value="category.id">{{category.name}}</option>
@@ -89,19 +89,13 @@
       </div>
     </div>
     <!-- TASK LIST -->
-    <div v-if="tasks.links.length > 3">
-      <ul class="pagination justify-content-center">
-        <template v-for="(link, key) in tasks.links">
-          <li class="page-item p-1" v-if="link.url === null" :key="key" v-html="link.label" />
-          <li class="page-item p-1" :class="{ 'active': link.active }"  v-else :key="key + 1"><a :href="link.url" v-html="link.label"></a></li>
-        </template>
-      </ul>
-    </div>
+    <Pagination :links="tasks.links"></Pagination>
   </AuthenticatedLayout>
 </template>
 
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+import Pagination from '@/Components/Pagination.vue';
 import { Head } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
 import { router } from '@inertiajs/vue3'
@@ -125,13 +119,17 @@ const modalFormTask = useForm({
   task_id: null,
 });
 
-function submit() {
-  form.post('create_task', {
-    onSuccess: () => {
-      router.reload();
-      resetForms()
-    },
-  });
+
+function submit(task){
+  axios.post(route('task.create', form))
+    .then(res => {
+      console.log(res)
+      router.reload({ only: ['tasks'] });
+      resetForms(); 
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
 
 function submitChange(){
@@ -143,12 +141,22 @@ function submitChange(){
   });
 }
 
-function deleteTask(task) {
-  router.post('delete_task', task)
+function deleteTask(task){
+  axios.post(route('task.delete', task))
+    .then(res => {
+      console.log(res)
+      router.get('dashboard');
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
 
 function taskComplete(task){
-  router.put('complete_task', task)
+  axios.put(route('task.complete',task))
+  .then(res => {
+     console.log(res)
+  })
 }
 
 function resetForms (){

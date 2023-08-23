@@ -6,12 +6,8 @@ use App\Models\Task;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Exception;
-use App\Http\Requests\TaskRequest;
-use Debugbar;
-
 
 class TaskController extends Controller
 {
@@ -26,41 +22,72 @@ class TaskController extends Controller
 
     public function create(Request $request)
     {
-        $request->validate([
-            'task_name' => 'required',
-            'task_category' => 'required',
-        ]);
+        try {
+            $request->validate([
+                'task_name' => 'required',
+                'task_category' => 'required',
+            ]);
 
-        $task = Task::create([
-            'name' => $request->task_name,
-            'user_id' => $request->user()->id,
-            'created_at' => Carbon::now(),
-            'category_id' => $request->task_category
-        ]);
+            $task = Task::create([
+                'name' => $request->task_name,
+                'user_id' => $request->user()->id,
+                'created_at' => Carbon::now(),
+                'category_id' => $request->task_category
+            ]);
 
-        sleep(1);
-
-        return redirect()->route('dashboard')->with('message', 'Task Created Successfully');
+            sleep(1);
+            return response()->json([
+                'message' => 'Task Created successfully',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while updating the task',
+                'exception' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function update(Request $request)
     {
+        try {
+            $request->validate([
+                'task_name' => 'required',
+                'task_category' => 'required',
+                'task_id' => 'required'
+            ]);
 
-        $request->validate([
-            'task_name' => 'required',
-            'task_category' => 'required',
-            'task_id' => 'required'
-        ]);
+            $task = Task::findOrFail($request->task_id);
+            $taskCategoryId = gettype($request->task_category) != 'string' ? $request->task_category : $task->category_id;
 
-        $task = Task::findOrFail($request->task_id);
-        $taskCategoryId = gettype($request->task_category) != 'string' ? $request->task_category : $task->category_id;
+            $task->update([
+                'name' => $request->task_name,
+                'category_id' => $taskCategoryId
+            ]);
+            return redirect()->back()->with('success', 'Task updated successfully.');
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while deleting the task',
+                'exception' => $e->getMessage(),
+            ], 500);
+        }
+    }
 
 
-        $task->update([
-            'name' => $request->task_name,
-            'category_id' => $taskCategoryId
-        ]);
-        return redirect()->back()->with('success', 'Task updated successfully.');
+    public function destroy(Request $request)
+    {
+        try {
+            $task = Task::findOrFail($request->id);
+            $task->delete();
+
+            return response()->json([
+                'message' => 'Task deleted successfully',
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json([
+                'error' => 'An error occurred while deleting the task',
+                'exception' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     public function complete(Request $request)
@@ -71,16 +98,14 @@ class TaskController extends Controller
             $task->update([
                 'done' => $taskStatus,
             ]);
-            return redirect()->back()->with('success', 'Task updated successfully');
+            return response()->json([
+                'message' => 'Task updated successfully',
+            ], 200);
         } catch (Exception $e) {
-            Debugbar::addThrowable($e);
+            return response()->json([
+                'error' => 'An error occurred while updating the task',
+                'exception' => $e->getMessage(),
+            ], 500);
         }
-    }
-
-    public function destroy(Request $request)
-    {
-        $task = Task::findOrFail($request->id);
-        $task->delete();
-        return redirect()->back()->with('success', 'Task updated successfully');
     }
 }
