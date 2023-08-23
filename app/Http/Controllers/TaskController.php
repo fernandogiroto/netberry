@@ -60,7 +60,7 @@ class TaskController extends Controller
             'name' => $request->task_name,
             'category_id' => $taskCategoryId
         ]);
-        return redirect()->back()->with('success', 'Task updated successfully');
+        return redirect()->back()->with('success', 'Task updated successfully.');
     }
 
     public function complete(Request $request)
