@@ -21,8 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // TO DO 
 // ADD BARREAR TOKEN ON HEANDER API CALL ON DASHBOARD PAGE
-
-Route::middleware('auth')->group(function () {
+Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('create_task', [TaskController::class, 'create'])->name('task.api.create');
     Route::put('update_task', [TaskController::class, 'update'])->name('task.api.update');
     Route::put('complete_task', [TaskController::class, 'complete'])->name('task.api.complete');

@@ -121,7 +121,7 @@ const modalFormTask = useForm({
 
 
 function submit(task){
-  axios.post(route('task.create', form))
+  axios.post(route('task.api.create', form))
     .then(res => {
       console.log(res)
       router.reload({ only: ['tasks'] });
@@ -142,7 +142,7 @@ function submitChange(){
 }
 
 function deleteTask(task){
-  axios.post(route('task.delete', task))
+  axios.post(route('task.api.delete', task))
     .then(res => {
       console.log(res)
       router.get('dashboard');
@@ -153,7 +153,7 @@ function deleteTask(task){
 }
 
 function taskComplete(task){
-  axios.put(route('task.complete',task))
+  axios.put(route('task.api.complete',task))
   .then(res => {
      console.log(res)
   })
